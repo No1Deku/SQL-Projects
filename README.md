@@ -38,7 +38,7 @@ CREATE TABLE Retail_Sales(
 );
 ```
 Step 2: Load Data Using Bulk Insert
-```sq;
+```sql
 BULK INSERT [dbo].[Retail_Sales]
 FROM 'D:\ZERO ANALYSTS SQL\Retail-Sales-Analysis-SQL-Project--P1-main\SQL - Retail Sales Analysis_utf .csv'
 WITH (
@@ -50,7 +50,7 @@ WITH (
 Data Cleaning
 
 Identify Missing Records
-```sq;
+```sql
 DECLARE @sql NVARCHAR(MAX);
 
 SELECT @sql = STRING_AGG(QUOTENAME(COLUMN_NAME) + ' IS NULL', ' OR ')

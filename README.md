@@ -19,7 +19,7 @@ Business Insight Generation: Write SQL queries to solve key business problems.
 Database Setup
 
 Step 1: Create Database and Table
-```
+```sql
 CREATE DATABASE SQL_PROJECTS_ZERO_ANALYSTS;
 USE SQL_PROJECTS_ZERO_ANALYSTS;
 
@@ -38,7 +38,7 @@ CREATE TABLE Retail_Sales(
 );
 ```
 Step 2: Load Data Using Bulk Insert
-```
+```sq;
 BULK INSERT [dbo].[Retail_Sales]
 FROM 'D:\ZERO ANALYSTS SQL\Retail-Sales-Analysis-SQL-Project--P1-main\SQL - Retail Sales Analysis_utf .csv'
 WITH (
@@ -50,7 +50,7 @@ WITH (
 Data Cleaning
 
 Identify Missing Records
-```
+```sq;
 DECLARE @sql NVARCHAR(MAX);
 
 SELECT @sql = STRING_AGG(QUOTENAME(COLUMN_NAME) + ' IS NULL', ' OR ')
@@ -61,7 +61,7 @@ SET @sql = 'SELECT * FROM Retail_Sales WHERE ' + @sql;
 EXEC sp_executesql @sql;
 ```
 Remove Null Entries
-```
+```sql
 DELETE FROM Retail_Sales 
 WHERE gender IS NULL
    OR quantiy IS NULL
@@ -70,7 +70,7 @@ WHERE gender IS NULL
    OR total_sale IS NULL;
 ```
 Exploratory Data Analysis
-```
+```sql
 Basic Stats
 
 SELECT COUNT(*) AS Total_Records FROM Retail_Sales;
@@ -92,12 +92,12 @@ SELECT DISTINCT category AS All_Categories FROM Retail_Sales;
 Business Analysis Queries
 
 1. Sales on Specific Day
-```
+```sql
 SELECT * FROM Retail_Sales 
 WHERE sale_date = '2022-11-05';
 ```
 2. High Quantity Clothing Sales in November
-```
+```sql
 SELECT * 
 FROM Retail_Sales
 WHERE category = 'Clothing'
@@ -105,7 +105,7 @@ WHERE category = 'Clothing'
   AND quantiy >= 4;
 ```
 3. Total and Count by Category
-```
+```sql
 SELECT 
     category, 
     '$' + FORMAT(SUM(total_sale), 'N2') AS Total_by_Category,
@@ -114,18 +114,18 @@ FROM Retail_Sales
 GROUP BY category;
 ```
 4. Average Age for Beauty Buyers
-```
+```sql
 SELECT AVG(age) AS [Average Age of Customers] 
 FROM Retail_Sales
 WHERE category = 'Beauty';
 ```
 5. High-Value Transactions
-```
+```sql
 SELECT * FROM Retail_Sales
 WHERE total_sale > 1000;
 ```
 6. Transaction Count by Gender and Category
-```
+```sql
 SELECT 
     category,
     gender,
@@ -135,7 +135,7 @@ GROUP BY category, gender
 ORDER BY category;
 ```
 7. Best Performing Month Each Year
-```
+```sql
 WITH Monthly_Avg AS (
     SELECT 
         YEAR(sale_date) AS Yearly,
@@ -159,7 +159,7 @@ WHERE Monthly_Rank = 1
 ORDER BY Yearly, Montly;
 ```
 8. Top 5 Customers by Total Sales
-```
+```sql
 SELECT TOP 5 
     customer_id, 
     SUM(total_sale) AS total_sale_sum
@@ -168,7 +168,7 @@ GROUP BY customer_id
 ORDER BY total_sale_sum DESC;
 ```
 9. Unique Customers by Category
-```
+```sql
 SELECT 
     COUNT(DISTINCT customer_id) AS Unique_Customers,
     category
@@ -176,7 +176,7 @@ FROM Retail_Sales
 GROUP BY category;
 ```
 10. Sales by Shift (Time of Day)
-```
+```sql
 SELECT 
   CASE 
     WHEN DATEPART(HOUR, sale_time) < 12 THEN 'Morning Shift'

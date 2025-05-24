@@ -19,7 +19,7 @@ Business Insight Generation: Write SQL queries to solve key business problems.
 Database Setup
 
 Step 1: Create Database and Table
-
+```
 CREATE DATABASE SQL_PROJECTS_ZERO_ANALYSTS;
 USE SQL_PROJECTS_ZERO_ANALYSTS;
 
@@ -36,9 +36,9 @@ CREATE TABLE Retail_Sales(
     cogs FLOAT,
     total_sale FLOAT
 );
-
+```
 Step 2: Load Data Using Bulk Insert
-
+```
 BULK INSERT [dbo].[Retail_Sales]
 FROM 'D:\ZERO ANALYSTS SQL\Retail-Sales-Analysis-SQL-Project--P1-main\SQL - Retail Sales Analysis_utf .csv'
 WITH (
@@ -46,11 +46,11 @@ WITH (
     FIELDTERMINATOR = ',',
     ROWTERMINATOR = '\n'
 );
-
+```
 Data Cleaning
 
 Identify Missing Records
-
+```
 DECLARE @sql NVARCHAR(MAX);
 
 SELECT @sql = STRING_AGG(QUOTENAME(COLUMN_NAME) + ' IS NULL', ' OR ')
@@ -59,18 +59,18 @@ WHERE TABLE_NAME = 'Retail_Sales';
 
 SET @sql = 'SELECT * FROM Retail_Sales WHERE ' + @sql;
 EXEC sp_executesql @sql;
-
+```
 Remove Null Entries
-
+```
 DELETE FROM Retail_Sales 
 WHERE gender IS NULL
    OR quantiy IS NULL
    OR price_per_unit IS NULL
    OR cogs IS NULL
    OR total_sale IS NULL;
-
+```
 Exploratory Data Analysis
-
+```
 Basic Stats
 
 SELECT COUNT(*) AS Total_Records FROM Retail_Sales;
@@ -88,44 +88,44 @@ SELECT
 FROM CustomerCounts;
 
 SELECT DISTINCT category AS All_Categories FROM Retail_Sales;
-
+```
 Business Analysis Queries
 
 1. Sales on Specific Day
-
+```
 SELECT * FROM Retail_Sales 
 WHERE sale_date = '2022-11-05';
-
+```
 2. High Quantity Clothing Sales in November
-
+```
 SELECT * 
 FROM Retail_Sales
 WHERE category = 'Clothing'
   AND FORMAT(sale_date, 'yyyy-MM') = '2022-11'
   AND quantiy >= 4;
-
+```
 3. Total and Count by Category
-
+```
 SELECT 
     category, 
     '$' + FORMAT(SUM(total_sale), 'N2') AS Total_by_Category,
     COUNT(total_sale) AS Total_by_Orders
 FROM Retail_Sales
 GROUP BY category;
-
+```
 4. Average Age for Beauty Buyers
-
+```
 SELECT AVG(age) AS [Average Age of Customers] 
 FROM Retail_Sales
 WHERE category = 'Beauty';
-
+```
 5. High-Value Transactions
-
+```
 SELECT * FROM Retail_Sales
 WHERE total_sale > 1000;
-
+```
 6. Transaction Count by Gender and Category
-
+```
 SELECT 
     category,
     gender,
@@ -133,9 +133,9 @@ SELECT
 FROM Retail_Sales
 GROUP BY category, gender
 ORDER BY category;
-
+```
 7. Best Performing Month Each Year
-
+```
 WITH Monthly_Avg AS (
     SELECT 
         YEAR(sale_date) AS Yearly,
@@ -157,26 +157,26 @@ SELECT
 FROM Monthly_Report
 WHERE Monthly_Rank = 1
 ORDER BY Yearly, Montly;
-
+```
 8. Top 5 Customers by Total Sales
-
+```
 SELECT TOP 5 
     customer_id, 
     SUM(total_sale) AS total_sale_sum
 FROM Retail_Sales
 GROUP BY customer_id
 ORDER BY total_sale_sum DESC;
-
+```
 9. Unique Customers by Category
-
+```
 SELECT 
     COUNT(DISTINCT customer_id) AS Unique_Customers,
     category
 FROM Retail_Sales
 GROUP BY category;
-
+```
 10. Sales by Shift (Time of Day)
-
+```
 SELECT 
   CASE 
     WHEN DATEPART(HOUR, sale_time) < 12 THEN 'Morning Shift'
@@ -193,7 +193,7 @@ GROUP BY
     WHEN DATEPART(HOUR, sale_time) >= 18 THEN 'Evening Shift'
     ELSE 'Unknown Shift'
   END;
-
+```
 Key Insights
 
 There are notable spikes in sales on specific days and months, which can inform marketing strategies.
